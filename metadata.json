@@ -1,0 +1,6 @@
+{
+  "name": "CS Launcher V2",
+  "description": "Professional Modpack Generator for Minecraft using the Modrinth API.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
