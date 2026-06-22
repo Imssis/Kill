@@ -181,6 +181,36 @@ fun BuilderScreen(viewModel: ModpackViewModel) {
             Box(modifier = Modifier.weight(1f)) {
                 if (uiState.isLoading) {
                     CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+                } else if (uiState.error != null) {
+                    Column(
+                        modifier = Modifier.align(Alignment.Center).padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Icon(
+                            Icons.Default.Error,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp),
+                            tint = MaterialTheme.colorScheme.error
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Text(
+                            "Failed to fetch mods",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold
+                        )
+                        Text(
+                            uiState.error ?: "Unknown error",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(top = 4.dp)
+                        )
+                        Button(
+                            onClick = { viewModel.search(searchQuery) },
+                            modifier = Modifier.padding(top = 16.dp)
+                        ) {
+                            Text("Retry")
+                        }
+                    }
                 } else if (uiState.searchResults.isEmpty()) {
                     Column(
                         modifier = Modifier.align(Alignment.Center),
