@@ -45,8 +45,11 @@ class ModpackViewModel(private val repository: ModpackRepository) : ViewModel() 
         search(null)
     }
 
+    private var searchJob: kotlinx.coroutines.Job? = null
+
     fun search(query: String?) {
-        viewModelScope.launch {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, error = null) }
             try {
                 val response = repository.search(
@@ -57,7 +60,9 @@ class ModpackViewModel(private val repository: ModpackRepository) : ViewModel() 
                 )
                 _uiState.update { it.copy(searchResults = response.hits, isLoading = false) }
             } catch (e: Exception) {
-                _uiState.update { it.copy(isLoading = false, error = e.message) }
+                if (e !is kotlinx.coroutines.CancellationException) {
+                    _uiState.update { it.copy(isLoading = false, error = e.localizedMessage ?: e.message) }
+                }
             }
         }
     }

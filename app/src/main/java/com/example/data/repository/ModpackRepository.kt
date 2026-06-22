@@ -41,7 +41,11 @@ class ModpackRepository(
             loaders = "[\"${loader.lowercase()}\"]",
             gameVersions = "[\"$minecraftVersion\"]"
         )
-        return versions.firstOrNull { it.gameVersions.contains(minecraftVersion) && it.loaders.contains(loader.lowercase()) }
+        // Find the first version that matches our criteria (case-insensitive for loaders)
+        return versions.firstOrNull { version ->
+            version.gameVersions.contains(minecraftVersion) && 
+            version.loaders.any { it.equals(loader, ignoreCase = true) }
+        }
     }
 
     suspend fun resolveDependencies(

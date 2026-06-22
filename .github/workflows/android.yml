@@ -21,6 +21,18 @@ jobs:
     - name: Setup Gradle
       uses: gradle/actions/setup-gradle@v3
 
+    - name: Decode Keystore
+      run: echo "${{ secrets.DEBUG_KEYSTORE_BASE64 }}" | base64 -d > debug.keystore
+      shell: bash
+      continue-on-error: true # Fallback if secret is not set, though it might still fail build
+
+    - name: Decode Keystore (Local Fallback)
+      run: |
+        if [ -f debug.keystore.base64 ]; then
+          base64 -d debug.keystore.base64 > debug.keystore
+        fi
+      shell: bash
+
     - name: Build with Gradle
       run: gradle assembleDebug
 
